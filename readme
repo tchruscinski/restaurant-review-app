@@ -1,3 +1,5 @@
-Added photograph property on the 10'th restaurant object which was missing.
+I Added photograph property on the 10'th restaurant object which was missing.
 
 No build tools are being used here. Run the app on local host having previously set up the node server at port 1337.
+
+*Allow auto update on reload for the service worker feature.
