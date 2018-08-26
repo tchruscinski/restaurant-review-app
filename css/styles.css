@@ -383,6 +383,73 @@ nav h1 a {
   font-size: 14px;
 }
 
+#form-container {
+	padding-bottom: 18%;
+	width: 100%;
+	box-sizing: border-box;
+}
+#form-container h2 {
+	color: #f58500;
+	font-size: 20pt;
+	font-weight: 300;
+	letter-spacing: -1px;
+	padding-bottom: 1pt;
+}
+form {
+	display: flex;
+	flex-wrap: wrap;
+	text-align: left;
+}
+
+#form-container label {
+	order: 1;
+	width: 10%;
+}
+
+#form-container input {
+	order: 2;
+	width: 50%;
+	margin-right: 5%;
+	margin-bottom: 2%;
+}
+
+#rating {
+	order: 3;
+}
+
+#review-comment {
+	order: 5;
+	width: 100%;
+}
+
+#review-comment textarea {
+	width: 80%;
+	margin: 0 auto;
+}
+
+#review-comment label{
+
+}
+
+.submit-button {
+	order: 6;
+	background-color: orange;
+	border-bottom: 3px solid transparent;
+	color: #fff;
+	display: inline-block;
+	font-size: 10pt;
+	margin: 15px 0 0;
+	padding: 7px 15px;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+.submit-button:hover,
+.submit-button:focus{
+  -webkit-box-shadow: 3px 3px 5px 0px rgba(104,104,107,1);
+  -moz-box-shadow: 3px 3px 5px 0px rgba(104,104,107,1);
+  box-shadow: 3px 3px 5px 0px rgba(104,104,107,1);
+}
 /* ====================== Media Queries index.html====================== */
 @media only screen and (min-width: 1200px){
   #restaurants-list li{

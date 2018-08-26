@@ -180,8 +180,22 @@ createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   more.setAttribute('aria-label', 'View more details about ' + restaurant.name + ' restaurant');
   li.append(more)
+  // 
+  // const isFavorite = (restaurant["is_favorite"]) ? true : false;
+  // const favorite = document.createElement("button");
+  // favorite.className = "favorite";
+  // ///////////////////////////////////////////////////////////CHANGE
+  // favorite.style.background = isFavorite
+  //   ? `url("/icons/002-like.svg") no-repeat`
+  //   : `url("icons/001-like-1.svg") no-repeat`;
+  // favorite.innerHTML = isFavorite
+  //   ? restaurant.name + " is a favorite"
+  //   : restaurant.name + " is not a favorite";
+  // favorite.id = "favorite-" + restaurant.id;
+  // favorite.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
+  // li.append(favorite);
 
-  return li
+  return li;
 }
 
 /**
@@ -197,6 +211,26 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+
+
+
+///////////////////////////////////////////////////////////
+// const handleFavoriteClick = (id, newState) => {
+//   // Update properties of the restaurant data object
+//   const favorite = document.getElementById("favorite-" + id);
+//   const restaurant = self
+//     .restaurants
+//     .filter(r => r.id === id)[0];
+//   if (!restaurant)
+//     return;
+//   restaurant["is_favorite"] = newState;
+//   favorite.onclick = event => handleFavoriteClick(restaurant.id, !restaurant["is_favorite"]);
+//   DBHelper.handleFavoriteClick(id, newState);
+// };
+//////////////////////////////////////////////////////////
+
+
 
 
 /**

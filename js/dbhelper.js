@@ -7,16 +7,20 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
-  static get DATABASE_URL() {
+  static get DATABASE_RESTAURANT_URL() {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
 
+  static get DATABASE_REVIEWS_URL() {
+    const port = 1337; // Change this to your server port
+    return `http://localhost:${port}/reviews`;
+  }
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback, id) {
-    let Url = DBHelper.DATABASE_URL;
+    let Url = DBHelper.DATABASE_RESTAURANT_URL;
     if (id) {
       Url = Url + '/' + id;
     }
@@ -47,6 +51,8 @@ class DBHelper {
       }
     });
   }
+
+
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
@@ -136,6 +142,24 @@ class DBHelper {
       }
     });
   }
+
+
+
+
+
+/////////////////////////////////////
+  /**
+   * Fetch reviews for restaurant by id.
+   */
+   static fetchReviewsById(id, callback) {
+     let Url = DBHelper.DATABASE_REVIEWS_URL;
+     
+   }
+   //////////////////////////////////////
+
+
+
+
 
   /**
    * Restaurant page URL.
