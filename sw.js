@@ -5,12 +5,17 @@ if (typeof idb === 'undefined') {
 var staticCacheName = 'restaurant-app1';
 
 
-const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
+const dbPromise = idb.open('restaurants-db', 2, function(upgradeDb) {
   switch (upgradeDb.oldVersion) {
     case 0:
       upgradeDb.createObjectStore('restaurants', {
         keyPath: 'id'
       });
+    case 1:
+      const reviewsStore = upgradeDB.createObjectStore("reviews", {
+        keyPath: "id"
+      });
+      reviewsStore.createIndex("restaurant_id", "restaurant_id");
   }
 });
 
@@ -86,7 +91,7 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  
+
   let requestToCache = event.request;
   if (event.request.url.indexOf('restaurant.html') > -1) {
     requestToCache = new Request('restaurant.html');

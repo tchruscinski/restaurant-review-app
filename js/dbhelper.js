@@ -144,21 +144,25 @@ class DBHelper {
   }
 
 
-
-
-
-/////////////////////////////////////
   /**
    * Fetch reviews for restaurant by id.
    */
    static fetchReviewsById(id, callback) {
      let Url = DBHelper.DATABASE_REVIEWS_URL;
-     
+     if (id) {
+       Url = Url + '/?restaurant_id=' + id;
+     }
+
+    fetch(Url).then(response => {
+      if (!response.clone().ok && !response.clone().redirected) {
+        throw "No reviews available";
+      }
+      response.json().then(result => {
+          callback(null, result);
+        })
+    }).catch(error => callback(error, null));
+
    }
-   //////////////////////////////////////
-
-
-
 
 
   /**
