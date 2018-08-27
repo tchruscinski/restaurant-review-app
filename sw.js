@@ -5,14 +5,14 @@ if (typeof idb === 'undefined') {
 var staticCacheName = 'restaurant-app1';
 
 
-const dbPromise = idb.open('restaurants-db', 2, function(upgradeDb) {
+const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
   switch (upgradeDb.oldVersion) {
     case 0:
       upgradeDb.createObjectStore('restaurants', {
         keyPath: 'id'
       });
     case 1:
-      const reviewsStore = upgradeDB.createObjectStore("reviews", {
+      const reviewsStore = upgradeDb.createObjectStore("reviews", {
         keyPath: "id"
       });
       reviewsStore.createIndex("restaurant_id", "restaurant_id");

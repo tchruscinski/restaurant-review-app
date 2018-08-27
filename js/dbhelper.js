@@ -159,6 +159,20 @@ class DBHelper {
       }
       response.json().then(result => {
           callback(null, result);
+          this.dbPromise().then(db =>{
+            if(!db) {
+              return;
+            }
+            let tx = db.transaction('reviews', 'readwrite');
+            const reviewsStore = tx.objectStore('reviews');
+            if (Array.isArray(result)) {
+              result.forEach(function(review) {
+                reviewsStore.put(review);
+              });
+            } else {
+              store.put(result);
+            }
+          });
         })
     }).catch(error => callback(error, null));
 
