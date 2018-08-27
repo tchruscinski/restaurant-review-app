@@ -168,15 +168,79 @@ class DBHelper {
             if (Array.isArray(result)) {
               result.forEach(function(review) {
                 reviewsStore.put(review);
-              });
+             });
             } else {
               store.put(result);
             }
           });
+
         })
     }).catch(error => callback(error, null));
 
    }
+
+
+
+///////////////////////////////////////////
+//Handling posting the review test verision
+
+static addReview(review) {
+    let data = review;
+
+    if(data == null){
+      return;
+    }
+    // if (!navigator.online) {
+    //   DBHelper.submitWhenOnline(data);
+    //   return;
+    // }
+    console.log(data);
+    let reviewToSend = {
+      'restaurant_id': parseInt(review.restaurant_id),
+      'name': review.name,
+      'createdAt': review.createdAt,
+      'updatedAt': review.updatedAt,
+      'rating': parseInt(review.rating),
+      'comments': review.comment
+    };
+    let Url = DBHelper.DATABASE_REVIEWS_URL;
+
+    fetch(Url, {
+        method: 'POST',
+        body: JSON.stringify(reviewToSend),
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then(response => {
+        const contentType = response.headers.get('Content-Type');
+        if (contentType && contentType.indexOf('application/json') != -1) {
+          return response.json();
+        } else {
+          return 'Fetch Successful';
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+}
+
+
+//LOCAL STORAGE web API
+
+static submitWhenOnline(data) {
+  localStorage.setItem('data', JSON.stringify(data));
+  console.log('You\'ve got data stored in your Local Storage');
+
+  window.addEventListener('online', (event) => {
+    let data = JSON.parse(localStorage.getItem('data'));
+  });
+
+  DBHelper.addReview(data);
+  localStorage.removeItem('data');
+
+  console.log('Your Local Storage has been cleared');
+}
+//////////////////////////////////////
+
 
 
   /**

@@ -63,9 +63,9 @@
     <!-- Add Review -->
      <section id="form-container">
        <h2 id="form-name">Add Review</h2>
-       <form id="review-form">
-         <label for="review-author">Name:</label></br>
-         <input id="review-author" name="name" type="text" placeholder="Your Name"/>
+       <form id="add-review">
+         <label for="review-name">Name:</label></br>
+         <input id="review-name" name="name" type="text" placeholder="Your Name" required/>
          <div id="rating">
            <label for="rating-select">Rating:&nbsp;</label>
            <select aria-label="Select Rating" id="rating-select" name="Rating">
@@ -77,11 +77,11 @@
            </select>
          </div>
          <div id="review-comment">
-           <label for="review-comment" placeholder="Your Comment">Comment:</label></br>
-           <textarea name="comment"></textarea></br>
+           <label for="review-comment">Comment:</label></br>
+           <textarea id="comment" name="comment" minlength="10" placeholder="Your Comment..."></textarea></br>
          </div>
          <!-- <div id="form-error"></div> -->
-         <button class="submit-button" onclick="addReview()">Add Review</button>
+         <button class="submit-button" onclick="addReviewFromWeb()">Add Review</button>
        </form>
      </section>
     </article>

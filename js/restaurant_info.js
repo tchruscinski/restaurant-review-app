@@ -156,6 +156,36 @@ createReviewHTML = (review) => {
   return li;
 }
 
+
+addReviewFromWeb = () => {
+  let restarantId = getParameterByName('id');
+  let name = document.getElementById('review-name').value;
+  let rating = document.querySelector('#rating-select option:checked').value;
+  let comment = document.getElementById('comment').value;
+  let date = new Date();
+  const webReview = {
+    restaurant_id: parseInt(restarantId),
+    name: name,
+    createdAt: date,
+    updatedAt: date,
+    rating: parseInt(rating),
+    comments: comment.substring(0, 500)
+  };
+  document.getElementById('add-review').reset();
+  //window.location.replace('http://localhost:8080/restaurant.html?id=' + restarantId);
+  console.log(webReview);
+  DBHelper.addReview(webReview);
+  addReviewHTML(webReview);
+
+}
+
+addReviewHTML = (review) => {
+    const ul = document.getElementById('reviews-list');
+    const container = document.getElementById('reviews-container');
+    ul.appendChild(createReviewHTML(review));
+    container.appendChild(ul);
+}
+
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
