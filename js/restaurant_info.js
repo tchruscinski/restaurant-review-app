@@ -4,7 +4,11 @@ var map;
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+ document.addEventListener('DOMContentLoaded', (event) => {
+   initMap();
+ });
+
+initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
@@ -133,7 +137,7 @@ createReviewHTML = (review) => {
   hr1.align = 'left';
   hr2.align = 'left';
   hr3.align = 'left';
-  
+
   name.innerHTML = review.name;
   li.appendChild(name);
   li.appendChild(hr1);

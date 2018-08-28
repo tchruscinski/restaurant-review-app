@@ -2,10 +2,10 @@ if (typeof idb === 'undefined') {
         self.importScripts('./idb.js');
     }
 
-var staticCacheName = 'restaurant-app1';
+var staticCacheName = 'restaurant-app-static';
 
 
-const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
+const dbPromise = idb.open('restaurants-db', 2, function(upgradeDb) {
   switch (upgradeDb.oldVersion) {
     case 0:
       upgradeDb.createObjectStore('restaurants', {
@@ -25,6 +25,7 @@ self.addEventListener('install', function(event) {
     caches.open(staticCacheName).then(function(cache) {
       return cache.addAll([
         '/',
+        '/restaurant.html'
         '/index.html',
         'js/main.js',
         'js/dbhelper.js',

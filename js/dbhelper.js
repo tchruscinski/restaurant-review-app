@@ -16,6 +16,23 @@ class DBHelper {
     const port = 1337; // Change this to your server port
     return `http://localhost:${port}/reviews`;
   }
+
+  static dbPromise() {
+    return idb.open('restaurants-db', 2, function(upgradeDb) {
+      switch (upgradeDb.oldVersion) {
+        case 0:
+          upgradeDb.createObjectStore('restaurants', {
+            keyPath: 'id'
+          });
+        case 1:
+          const reviewsStore = upgradeDb.createObjectStore('reviews', {
+            keyPath: 'id'
+          });
+          reviewsStore.createIndex('restaurant_id', 'restaurant_id');
+      }
+    });
+  }
+
   /**
    * Fetch all restaurants.
    */
@@ -198,7 +215,7 @@ static addReview(review) {
       DBHelper.submitWhenOnline(dataObj);
       return;
     }
-    console.log(data);
+    console.log(dataObj.data);
     let reviewToSend = {
       'restaurant_id': review.restaurant_id,
       'name': review.name,
