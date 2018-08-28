@@ -25,7 +25,7 @@ self.addEventListener('install', function(event) {
     caches.open(staticCacheName).then(function(cache) {
       return cache.addAll([
         '/',
-        '/restaurant.html'
+        '/restaurant.html',
         '/index.html',
         'js/main.js',
         'js/dbhelper.js',
@@ -70,7 +70,7 @@ self.addEventListener('install', function(event) {
         'images_small/7.jpg',
         'images_small/8.jpg',
         'images_small/9.jpg',
-        'images_small/10.jpg',
+        'images_small/10.jpg'
       ]);
     })
 
@@ -173,16 +173,17 @@ function reviewsEvent(event, id) {
   }).then(function (data) {
     return data.length && data || fetch(event.request).then(function(response) {
       return response.json();
-    }).then(function(data) {
-      return dbPromise.then(function(db) {
-        var tx = db.transaction("reviews", "readwrite");
-        var store = tx.objectStore("reviews");
-        data.forEach(function (review) {
-          store.put({ id: review.id, "restaurant_id": review["restaurant_id"], data: review });
-        });
-        return data;
-      });
-    });
+    })
+    // .then(function(data) {
+    //   return dbPromise.then(function(db) {
+    //     var tx = db.transaction("reviews", "readwrite");
+    //     var store = tx.objectStore("reviews");
+    //     data.forEach(function (review) {
+    //       store.put({ id: review.id, "restaurant_id": review["restaurant_id"], data: review });
+    //     });
+    //     return data;
+    //   });
+    // });
   }).then(finalResponse => {
         var mapResponse = finalResponse.map(review => {
         return review.data;

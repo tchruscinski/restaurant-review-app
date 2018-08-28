@@ -10,6 +10,7 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+  initMap();
 });
 
 /**
@@ -72,7 +73,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+initMap = () => {
   let loc = {
     lat: 40.722216,
     lng: -73.987501
@@ -140,11 +141,44 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+
+    // IntersectionObserver for loading images
+    const image = document.createElement('img');
+    image.alt = 'Photo taken in ' + restaurant.name + ' restaurant.';
+    const options = {
+      threshold: 0.1
+    };
+
+    let observer;
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(onChange, options);
+      observer.observe(image);
+    } else {
+      console.log('Intersection Observers not supported', 'color: red');
+      loadImage(image);
+    }
+    const loadImage = image => {
+      image.className = 'restaurant-img';
+      image.src = DBHelper.imageUrlForRestaurant(restaurant);
+    }
+
+    function onChange(changes, observer) {
+      changes.forEach(change => {
+        if (change.intersectionRatio > 0) {
+          //console.log('image in View');
+          // Stop watching and load the image
+          loadImage(change.target);
+          observer.unobserve(change.target);
+        } else {
+          //console.log('image out View');
+        }
+      });
+    }
+
   const picture = document.createElement('picture');
   const source1 = document.createElement('source');
   const source2 = document.createElement('source');
   const source3 = document.createElement('source');
-  const image = document.createElement('img');
   picture.className = 'restaurant-img';
   source1.media = '(min-width: 1000px) and (max-width: 1199px)';
   source2.media = '(min-width: 1200px)';
@@ -152,10 +186,6 @@ createRestaurantHTML = (restaurant) => {
   source1.srcset = DBHelper.imageUrlForRestaurantmedium(restaurant);
   source2.srcset = DBHelper.imageUrlForRestaurant(restaurant);
   source3.srcset = DBHelper.imageUrlForRestaurantmedium(restaurant);
-
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = 'Photo taken in ' + restaurant.name + ' restaurant.';
 
   picture.append(source1);
   picture.append(source2);
@@ -180,7 +210,7 @@ createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   more.setAttribute('aria-label', 'View more details about ' + restaurant.name + ' restaurant');
   li.append(more)
-  // 
+  //
   // const isFavorite = (restaurant["is_favorite"]) ? true : false;
   // const favorite = document.createElement("button");
   // favorite.className = "favorite";
