@@ -100,8 +100,17 @@ self.addEventListener('fetch', function(event) {
   if (Url.port === '1337') {
     //splits the url into parts on /
     const parts = Url.pathname.split("/");
-    //if restaurant exists within the url id is the last part of the url => index is length - 1
-    const id = parts[parts.length - 1] === "restaurants" ? "-1" : parts[parts.length - 1];
+    let id = Url.searchParams.get('restaurant_id');
+
+    if (!id) {
+      if (Url.pathname.indexOf('restaurants') > -1) {
+        //if restaurant exists within the url id is the last part of the url => index is length - 1
+        id = parts[parts.length - 1] === "restaurants" ? "-1" : parts[parts.length - 1];
+      } else {
+        //url for getting reviews
+        id = Url.searchParams.get('restaurant_id');
+      }
+    }
     serverEvent(event, id);
   } else {
     defaultEvent(event, requestToCache);
@@ -109,8 +118,25 @@ self.addEventListener('fetch', function(event) {
 });
 
 
-    //put stuff into the IndexedDB
+
 function serverEvent(event, id) {
+
+  if (event.request.method != 'GET') {
+    return fetch(event.request).then(function(response){
+        return resonse.json();
+    }).then(function(data) {
+        return data;
+    });
+  }
+
+  if (event.request.url.indexOf('reviews') > -1) {
+    reviewsEvent(event, id);
+  } else {
+    restaurantEvent(event, id);
+  }
+}
+
+function restaurantEvent(event, id) {
 
   event.respondWith(dbPromise.then(function(db) {
     return db.transaction("restaurants").objectStore("restaurants").get(id);
@@ -137,6 +163,38 @@ function serverEvent(event, id) {
     })
   );
 };
+
+
+function reviewsEvent(event, id) {
+
+  event.respondWith(dbPromise.then(function(db) {
+    return db.transaction("reviews").objectStore("reviews").index("restaurant_id").getAll(id);
+  }).then(function (data) {
+    return data.length && data || fetch(event.request).then(function(response) {
+      return response.json();
+    }).then(function(data) {
+      return dbPromise.then(function(db) {
+        var tx = db.transaction("reviews", "readwrite");
+        var store = tx.objectStore("reviews");
+        data.forEach(function (review) {
+          store.put({ id: review.id, "restaurant_id": review["restaurant_id"], data: review });
+        });
+        return data;
+      });
+    });
+  }).then(finalResponse => {
+        var mapResponse = finalResponse.map(review => {
+        return review.data;
+      });
+      return new Response(JSON.stringify(mapResponse));
+  }).catch(error => {
+    return new Response("Error fetching data", {
+      status: 500
+    });
+  }));
+};
+
+
 
 
 function defaultEvent(event, requestToCache) {

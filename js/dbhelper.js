@@ -159,7 +159,7 @@ class DBHelper {
       }
       response.json().then(result => {
           callback(null, result);
-          this.dbPromise().then(db =>{
+          this.dbPromise().then(db => {
             if(!db) {
               return;
             }
@@ -173,10 +173,11 @@ class DBHelper {
               store.put(result);
             }
           });
-
+          return Promise.resolve(result);
         })
-    }).catch(error => callback(error, null));
-
+    }).catch(error => {
+      callback(error, null);
+    });
    }
 
 
@@ -185,23 +186,26 @@ class DBHelper {
 //Handling posting the review test verision
 
 static addReview(review) {
-    let data = review;
+    let dataObj = {
+      name: 'addReview',
+      data: review,
+    }
 
-    if(data == null){
+    if(dataObj.data == null){
       return;
     }
-    // if (!navigator.online) {
-    //   DBHelper.submitWhenOnline(data);
-    //   return;
-    // }
+    if (!navigator.onLine && dataObj.name == 'addReview') {
+      DBHelper.submitWhenOnline(dataObj);
+      return;
+    }
     console.log(data);
     let reviewToSend = {
-      'restaurant_id': parseInt(review.restaurant_id),
+      'restaurant_id': review.restaurant_id,
       'name': review.name,
       'createdAt': review.createdAt,
       'updatedAt': review.updatedAt,
-      'rating': parseInt(review.rating),
-      'comments': review.comment
+      'rating': review.rating,
+      'comments': review.comments
     };
     let Url = DBHelper.DATABASE_REVIEWS_URL;
 
@@ -226,15 +230,15 @@ static addReview(review) {
 
 //LOCAL STORAGE web API
 
-static submitWhenOnline(data) {
-  localStorage.setItem('data', JSON.stringify(data));
+static submitWhenOnline(dataObj) {
+  localStorage.setItem('data', JSON.stringify(dataObj.data));
   console.log('You\'ve got data stored in your Local Storage');
 
   window.addEventListener('online', (event) => {
     let data = JSON.parse(localStorage.getItem('data'));
   });
 
-  DBHelper.addReview(data);
+  DBHelper.addReview(dataObj.data);
   localStorage.removeItem('data');
 
   console.log('Your Local Storage has been cleared');
