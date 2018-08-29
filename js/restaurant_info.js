@@ -221,13 +221,3 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-
-
-/**
- * Registering the serviceworker
- */
-
-if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('Service worker successfully registered.'))
-}

@@ -75,15 +75,17 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Google map, called from HTML.
  */
 initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
+  self.newMap = L.map('map', {
+    center: [40.722216, -73.987501],
     zoom: 12,
-    center: loc,
-    scrollwheel: false
+    scrollWheelZoom: false
   });
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
+    mapboxToken: 'pk.eyJ1IjoibXJwdW1wa2luZyIsImEiOiJjamoyNXUzcDIwenpyM2tsZm03MDJnOHFqIn0.K5wTgEieIuewCzBwoLVGRw',
+    maxZoom: 18,
+    attribution: '',
+    id: 'mapbox.streets'
+  }).addTo(newMap);
   updateRestaurants();
 }
 
@@ -133,7 +135,9 @@ resetRestaurants = (restaurants) => {
   ul.innerHTML = '';
 
   // Remove all map markers
-  self.markers.forEach(m => m.setMap(null));
+  if (self.markers) {
+    self.markers.forEach(marker => marker.remove());
+  }
   self.markers = [];
   self.restaurants = restaurants;
 }
@@ -254,10 +258,12 @@ createRestaurantHTML = (restaurant) => {
 addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
+    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
+    marker.on("click", onClick);
+
+    function onClick() {
+      window.location.href = marker.options.url;
+    }
     self.markers.push(marker);
   });
 }
@@ -274,16 +280,4 @@ toggleFavorite = (el, favorite) => {
     el.classList.add('favorite');
     el.setAttribute('aria-label', 'Remove favorite mark');
   }
-}
-
-
-
-
-/**
- * Registering the serviceworker
- */
-
-if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('Service worker successfully registered.'))
 }

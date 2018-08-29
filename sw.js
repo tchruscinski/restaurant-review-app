@@ -1,9 +1,29 @@
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js');
 if (typeof idb === 'undefined') {
-        self.importScripts('./idb.js');
+        self.importScripts('js/idb.js');
     }
 
 var staticCacheName = 'restaurant-app-static';
-
+workbox.precaching.precache([
+  '/css/styles.min.css',
+  '/js/main.js',
+  '/js/dbhelper.js',
+  '/js/restaurant_info.js',
+  '/js/idb.js',
+  '/js/sw-register.js',
+  '/restaurant.html',
+  '/index.html',
+  'images_small/1.webp',
+  'images_small/2.webp',
+  'images_small/3.webp',
+  'images_small/4.webp',
+  'images_small/5.webp',
+  'images_small/6.webp',
+  'images_small/7.webp',
+  'images_small/8.webp',
+  'images_small/9.webp',
+  'images_small/10.webp'
+]);
 
 const dbPromise = idb.open('restaurants-db', 2, function(upgradeDb) {
   switch (upgradeDb.oldVersion) {
@@ -27,40 +47,12 @@ self.addEventListener('install', function(event) {
         '/',
         '/restaurant.html',
         '/index.html',
-        'js/main.min.js',
-        'js/dbhelper.min.js',
-        'js/restaurant_info.min.js',
+        'js/main.js',
+        'js/dbhelper.js',
+        'js/idb.js',
+        'js/sw-register.js',
+        'js/restaurant_info.js',
         'css/styles.min.css',
-        'images_largex1/1.jpg',
-        'images_largex1/2.jpg',
-        'images_largex1/3.jpg',
-        'images_largex1/4.jpg',
-        'images_largex1/5.jpg',
-        'images_largex1/6.jpg',
-        'images_largex1/7.jpg',
-        'images_largex1/8.jpg',
-        'images_largex1/9.jpg',
-        'images_largex1/10.jpg',
-        'images_largex2/1.jpg',
-        'images_largex2/2.jpg',
-        'images_largex2/3.jpg',
-        'images_largex2/4.jpg',
-        'images_largex2/5.jpg',
-        'images_largex2/6.jpg',
-        'images_largex2/7.jpg',
-        'images_largex2/8.jpg',
-        'images_largex2/9.jpg',
-        'images_largex2/10.jpg',
-        'images_medium/1.webp',
-        'images_medium/2.webp',
-        'images_medium/3.webp',
-        'images_medium/4.webp',
-        'images_medium/5.webp',
-        'images_medium/6.webp',
-        'images_medium/7.webp',
-        'images_medium/8.webp',
-        'images_medium/9.webp',
-        'images_medium/10.webp',
         'images_small/1.webp',
         'images_small/2.webp',
         'images_small/3.webp',
@@ -118,8 +110,6 @@ self.addEventListener('fetch', function(event) {
   }
 });
 
-
-
 function serverEvent(event, id) {
 
   if (event.request.method != 'GET') {
@@ -164,8 +154,6 @@ function restaurantEvent(event, id) {
     })
   );
 };
-
-
 function reviewsEvent(event, id) {
 
   event.respondWith(dbPromise.then(function(db) {
@@ -174,16 +162,6 @@ function reviewsEvent(event, id) {
     return data.length && data || fetch(event.request).then(function(response) {
       return response.json();
     })
-    // .then(function(data) {
-    //   return dbPromise.then(function(db) {
-    //     var tx = db.transaction("reviews", "readwrite");
-    //     var store = tx.objectStore("reviews");
-    //     data.forEach(function (review) {
-    //       store.put({ id: review.id, "restaurant_id": review["restaurant_id"], data: review });
-    //     });
-    //     return data;
-    //   });
-    // });
   }).then(finalResponse => {
         var mapResponse = finalResponse.map(review => {
         return review.data;
@@ -195,9 +173,6 @@ function reviewsEvent(event, id) {
     });
   }));
 };
-
-
-
 
 function defaultEvent(event, requestToCache) {
 

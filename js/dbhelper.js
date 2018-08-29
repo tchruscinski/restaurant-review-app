@@ -325,13 +325,12 @@ static updateFavoriteStatus(restaurantId, isFavorite) {
    * Map marker for a restaurant.
    */
   static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
+    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng], {
       title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
+      alt: restaurant.name,
+      url: DBHelper.urlForRestaurant(restaurant)
+    })
+    marker.addTo(newMap);
     return marker;
   }
 
