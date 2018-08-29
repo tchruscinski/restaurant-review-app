@@ -165,12 +165,8 @@ createRestaurantHTML = (restaurant) => {
     function onChange(changes, observer) {
       changes.forEach(change => {
         if (change.intersectionRatio > 0) {
-          //console.log('image in View');
-          // Stop watching and load the image
           loadImage(change.target);
           observer.unobserve(change.target);
-        } else {
-          //console.log('image out View');
         }
       });
     }
@@ -210,11 +206,11 @@ createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   more.setAttribute('aria-label', 'View more details about ' + restaurant.name + ' restaurant');
   li.append(more)
-  //
+
   // const isFavorite = (restaurant["is_favorite"]) ? true : false;
   // const favorite = document.createElement("button");
-  // favorite.className = "favorite";
-  // ///////////////////////////////////////////////////////////CHANGE
+  // favourite.innerHTML = '❤';
+  // favorite.className = "favorite-button";
   // favorite.style.background = isFavorite
   //   ? `url("/icons/002-like.svg") no-repeat`
   //   : `url("icons/001-like-1.svg") no-repeat`;

@@ -275,7 +275,7 @@ static submitWhenOnline(dataObj) {
    * Restaurant image URL for small images.
    */
   static imageUrlForRestaurant(restaurant) {
-      return (`/images_small/${restaurant.photograph}.jpg`);
+      return (`/images_small/${restaurant.photograph}.webp`);
   }
 
 
@@ -284,7 +284,7 @@ static submitWhenOnline(dataObj) {
    */
   static imageUrlForRestaurantmedium(restaurant) {
     //TODO: return url depending on viewport width -15 (scrollbar width)
-      return (`/images_medium/${restaurant.photograph}.jpg`);
+      return (`/images_medium/${restaurant.photograph}.webp`);
     }
 
     /**
