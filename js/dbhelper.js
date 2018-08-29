@@ -260,9 +260,27 @@ static submitWhenOnline(dataObj) {
 
   console.log('Your Local Storage has been cleared');
 }
-//////////////////////////////////////
 
-
+//update restaurant isfavourite status
+static updateFavoriteStatus(restaurantId, isFavorite) {
+  fetch(`${DBHelper.DATABASE_RESTAURANT_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
+      method: 'PUT'
+    }).then(() => {
+      console.log('successful change');
+      console.log(isFavorite);
+      this.dbPromise()
+        .then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          const restaurantsStore = tx.objectStore('restaurants');
+          return restaurantsStore.get(restaurantId).then(restaurant => {
+              console.log(restaurant);
+              restaurant.is_favorite = isFavorite;
+              console.log(restaurant);
+              restaurantsStore.put(restaurant);
+            });
+        })
+    });
+}
 
   /**
    * Restaurant page URL.
@@ -282,26 +300,26 @@ static submitWhenOnline(dataObj) {
   /**
    * Restaurant image URL for medium images.
    */
-  static imageUrlForRestaurantmedium(restaurant) {
-    //TODO: return url depending on viewport width -15 (scrollbar width)
-      return (`/images_medium/${restaurant.photograph}.webp`);
-    }
-
-    /**
-   * Restaurant image URL for large x2 images.
-   */
-  static imageUrlForRestaurantlargex2(restaurant) {
-    //TODO: return url depending on viewport width -15 (scrollbar width)
-      return (`/images_largex2/${restaurant.photograph}.jpg`);
-    }
-
-    /**
-   * Restaurant image URL for large x1 images.
-   */
-  static imageUrlForRestaurantlargex1(restaurant) {
-    //TODO: return url depending on viewport width -15 (scrollbar width)
-      return (`/images_largex1/${restaurant.photograph}.jpg`);
-    }
+  // static imageUrlForRestaurantmedium(restaurant) {
+  //   //TODO: return url depending on viewport width -15 (scrollbar width)
+  //     return (`/images_medium/${restaurant.photograph}.webp`);
+  //   }
+  //
+  //   /**
+  //  * Restaurant image URL for large x2 images.
+  //  */
+  // static imageUrlForRestaurantlargex2(restaurant) {
+  //   //TODO: return url depending on viewport width -15 (scrollbar width)
+  //     return (`/images_largex2/${restaurant.photograph}.jpg`);
+  //   }
+  //
+  //   /**
+  //  * Restaurant image URL for large x1 images.
+  //  */
+  // static imageUrlForRestaurantlargex1(restaurant) {
+  //   //TODO: return url depending on viewport width -15 (scrollbar width)
+  //     return (`/images_largex1/${restaurant.photograph}.jpg`);
+  //   }
 
   /**
    * Map marker for a restaurant.

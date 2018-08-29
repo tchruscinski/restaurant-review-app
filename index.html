@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#252831">
   <link rel="manifest" href="/manifest.json" />
   <meta charset="utf-8">
+  <link rel="preload" href="css/styles.min.css">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.min.css">
   <title>Restaurant Reviews</title>
@@ -22,6 +23,7 @@
   </header>
 
   <main id="maincontent">
+    <!-- <button id="load-map" style="height:15px;width:40px;">toggle map</button> -->
     <section id="map-container">
       <div aria-label="Map with marked all the restaurants availalable in our app." id="map" role="application"></div>
     </section>
@@ -41,9 +43,9 @@
     </section>
   </main>
 
-  <script defer src="js/idb.js"></script>
-  <script defer type="application/javascript" charset="utf-8" src="js/dbhelper.min.js"></script>
-  <script defer type="application/javascript" charset="utf-8" src="js/main.min.js"></script>
+  <script async defer src="js/idb.js"></script>
+  <script async defer type="application/javascript" charset="utf-8" src="js/dbhelper.min.js"></script>
+  <script async defer type="application/javascript" charset="utf-8" src="js/main.min.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD710AlC5wV2LLq9zQiGAk_FsJ6pt-docc&libraries=places&callback=initMap"></script>
 
 
